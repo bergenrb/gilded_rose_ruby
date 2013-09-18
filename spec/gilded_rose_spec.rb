@@ -69,7 +69,7 @@ describe GildedRose do
   end
 
   context "'Sulfuras', being a legendary item, never has to be sold or decreases in Quality" do
-    let (:sulfuras_items){[Item.new("Sulfuras, Hand of Ragnaros", 1, 1)]}
+    let (:sulfuras_items){[Item.new("Sulfuras, Hand of Ragnaros", 1, 80)]}
     it "should not decrease sell_in when updating quality" do
       do_update_quality(sulfuras_items) do |item, org_item|
         expect(item.sell_in).to eq(org_item.sell_in)
@@ -81,6 +81,13 @@ describe GildedRose do
         expect(item.quality).to eq(org_item.quality)
       end
     end
+
+    it "should have 80 as quality" do
+      do_update_quality(sulfuras_items) do |item, org_item|
+        expect(item.quality).to eq(80)
+      end
+    end
+
   end
 
   context "'Backstage passes', like aged brie, increases in Quality as it's SellIn value approaches;
@@ -111,6 +118,8 @@ describe GildedRose do
     end
 
   end
+
+
 
 
 end
