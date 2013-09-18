@@ -87,11 +87,28 @@ describe GildedRose do
           Quality increases by 2 when there are 10 days or less
                   and by 3 when there are 5 days or less
                   but Quality drops to 0 after the concert" do
-    let(:items_12_days) {[Item.new("Backstage passes to a TAFKAL80ETC concert",12,2)]}
+
+    let(:items_10_days) {[Item.new("Backstage passes to a TAFKAL80ETC concert",10,2)]}
     let(:items_5_days) {[Item.new("Backstage passes to a TAFKAL80ETC concert",5,2)]}
     let(:items_0_days) {[Item.new("Backstage passes to a TAFKAL80ETC concert",0,2)]}
 
+    it "should  increase Quality by 2 when there are between 6 and 10 days left" do
+      do_update_quality(items_10_days) do |item, org_item|
+        expect(item.quality).to eq(org_item.quality+2)
+      end
+    end
 
+    it "should  increase Quality by 3 when there are between 0 and 5 days left" do
+      do_update_quality(items_5_days) do |item, org_item|
+        expect(item.quality).to eq(org_item.quality+3)
+      end
+    end
+
+    it "should  drop Quality to 0 after the concert" do
+      do_update_quality(items_0_days) do |item, org_item|
+        expect(item.quality).to eq(0)
+      end
+    end
 
   end
 
