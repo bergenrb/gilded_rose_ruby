@@ -69,7 +69,7 @@ describe GildedRose do
   end
 
   context "'Sulfuras', being a legendary item, never has to be sold or decreases in Quality" do
-    let (:sulfuras_items){[Item.new("Sulfuras, Hand of Ragnaros", 1, 80)]}
+    let (:sulfuras_items) { [Item.new("Sulfuras, Hand of Ragnaros", 1, 80)] }
     it "should not decrease sell_in when updating quality" do
       do_update_quality(sulfuras_items) do |item, org_item|
         expect(item.sell_in).to eq(org_item.sell_in)
@@ -95,9 +95,9 @@ describe GildedRose do
                   and by 3 when there are 5 days or less
                   but Quality drops to 0 after the concert" do
 
-    let(:items_10_days) {[Item.new("Backstage passes to a TAFKAL80ETC concert",10,2)]}
-    let(:items_5_days) {[Item.new("Backstage passes to a TAFKAL80ETC concert",5,2)]}
-    let(:items_0_days) {[Item.new("Backstage passes to a TAFKAL80ETC concert",0,2)]}
+    let(:items_10_days) { [Item.new("Backstage passes to a TAFKAL80ETC concert", 10, 2)] }
+    let(:items_5_days) { [Item.new("Backstage passes to a TAFKAL80ETC concert", 5, 2)] }
+    let(:items_0_days) { [Item.new("Backstage passes to a TAFKAL80ETC concert", 0, 2)] }
 
     it "should  increase Quality by 2 when there are between 6 and 10 days left" do
       do_update_quality(items_10_days) do |item, org_item|
@@ -119,7 +119,13 @@ describe GildedRose do
 
   end
 
-
+  context '"Conjured" items degrade in Quality twice as fast as normal items' do
+    it "should degrade twice as fast as normal" do
+      do_update_quality([Item.new("Conjured", 1, 10)]) do |item, org_item|
+        expect(item.quality).to eq(org_item.quality-2)
+      end
+    end
+  end
 
 
 end

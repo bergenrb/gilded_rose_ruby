@@ -1,26 +1,24 @@
 class GildedRose
   NON_CHANING_ITEMS=["Sulfuras, Hand of Ragnaros"]
   INCREASING_ITEMS=["Aged Brie", "Backstage passes to a TAFKAL80ETC concert"]
-
   AGING_ITEMS=["Aged Brie"]
   BACKSTAGE_PASS_ITEM=["Backstage passes to a TAFKAL80ETC concert"]
+  DOUBLE_DEGRADE_ITEMS=["Conjured"]
 
   def initialize(items)
     @items = items
   end
 
   def update_quality()
-    @items.each do |item|
-      update_item(item)
-    end
+    @items.each { |item| update_item(item) }
   end
 
   def update_item(item)
-    return item if is_non_chaning_item?(item)
+    return item if is_non_changing_item?(item)
 
     item.sell_in = item.sell_in - 1
 
-    update_item_quality(item, calc_normal_factor(item) + calc_aging_factor(item) + calc_backstage_factor(item) )
+    update_item_quality(item, (calc_x_factor(item) * calc_normal_factor(item)) + calc_aging_factor(item) + calc_backstage_factor(item) )
   end
 
   def update_item_quality(item, factor)
@@ -44,6 +42,10 @@ class GildedRose
     return 0 unless is_backstage_pass_item?(item)
 
     quality_backstage_pass_factor(item.sell_in, item.quality)
+  end
+
+  def calc_x_factor(item)
+    is_double_degrade_item?(item) ? 2 : 1
   end
 
   # Actual factors based on type
@@ -71,6 +73,8 @@ class GildedRose
 
   end
 
+  private
+
   def factor_from_remaining_days(remaning_days)
     return 2 if remaning_days < 6
     return 1 if remaning_days < 11
@@ -80,7 +84,7 @@ class GildedRose
 
   # Categories of items
 
-  def is_non_chaning_item?(item)
+  def is_non_changing_item?(item)
     NON_CHANING_ITEMS.include?(item.name)
   end
 
@@ -94,6 +98,10 @@ class GildedRose
 
   def is_backstage_pass_item?(item)
     BACKSTAGE_PASS_ITEM.include?(item.name)
+  end
+
+  def is_double_degrade_item?(item)
+    DOUBLE_DEGRADE_ITEMS.include?(item.name)
   end
 
 end
